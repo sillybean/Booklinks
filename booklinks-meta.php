@@ -1,4 +1,5 @@
-<?
+<?php
+
 add_action('add_meta_boxes', 'booklinks_meta_box');
 add_action('save_post', 'booklinks_save_postdata');
 

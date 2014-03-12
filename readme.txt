@@ -3,16 +3,22 @@ Contributors: sillybean
 Tags: books, authors, books, bookstores
 Requires at least: 3.1
 Tested up to: 3.8
-Stable tag: 1.0b
+Stable tag: 1.0
 License: GPLv2
 
-Booklinks lets you create a bookstore with links to bookstores you specify. You can use your own affiliate codes.
+Booklinks lets you create a bookstore with links to bookstores you specify. The list of stores is configurable and supports affiliate codes. Store links can be turned on per book (so you can link only to ebook stores for an ebook, for example). 
 
 == Description ==
 
 Allows you to create books (a custom post type) with links to bookstores. On the plugin's option page, you can specify the list of bookstores you wish to use. The default list includes Amazon, B&N, Indiebound, iBooks, and Audible. You may remove any of these and add your own bookstores. On each individual book, you'll be able to toggle the display of these stores (so that you don't include a link to Audible when no audiobook is available, for example).
 
-Originally based on MyBooks for Authors; now a mostly complete rewrite.
+Bookstore links are automatically appended to the content of book posts. Elsewhere, you may use the [booklinks id="n"] shortcode, where id is the ID of the book post whose books you wish to display. You may also use slugs with either the slug or name attribute:
+
+[booklinks id="n"]
+[booklinks name="my-book-title"]
+[booklinks slug="my-book-title"]
+
+A rewrite of MyBooks for Authors by Out:think Group.
 
 == Installation ==
 
@@ -22,5 +28,5 @@ Originally based on MyBooks for Authors; now a mostly complete rewrite.
 
 == Changelog ==
 
-= 1.0b =
-* Rewrite of MyBooks for Authors. Removed built-in bookstore list and made it totally configurable. Rewrote widget code for data sanitization and validation.
+= 1.0 =
+* Rewrite of MyBooks for Authors. Removed built-in bookstore list and made it totally configurable. Rewrote all settings for data sanitization and validation. 

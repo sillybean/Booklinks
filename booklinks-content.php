@@ -1,13 +1,16 @@
-<?
+<?php
+
 add_filter('the_content', 'append_booklinks');
 add_shortcode('booklinks', 'booklinks_shortcode');
 
-function append_booklinks($content, $doing_shortcode = false) {
+function append_booklinks($content, $id = 0, $doing_shortcode = false) {
 	$links = array();
 	global $post;
 	if ( $doing_shortcode || get_post_type($post) == 'book' ) {
-		$isbn = get_post_meta( $post->ID, 'book_isbn', true );
-		$stores = get_post_meta( $post->ID, 'book_stores', true );
+		if ( !isset($id) || !$id )
+			$id = $post->ID;
+		$isbn = get_post_meta( $id, 'book_isbn', true );
+		$stores = get_post_meta( $id, 'book_stores', true );
 		$options = get_option( 'mybooks_stores' );
 		foreach ( $stores as $store => $on ) {
 			if ( $on && !empty( $options[$store]['link'] ) ) {
@@ -22,8 +25,31 @@ function append_booklinks($content, $doing_shortcode = false) {
 	return $links . $content;
 }
 
-// [booklinks]
+// [booklinks id="n"] or [booklinks name="my-book-title"] or [booklinks slug="my-book-title"]
 function booklinks_shortcode($atts, $content = NULL) {
-	extract(shortcode_atts(array(), $atts));
-	return append_booklinks($content, true);
+	
+	extract( shortcode_atts( array(), $atts ) );
+	
+	if ( !isset( $id ) ) {
+		if ( !isset( $name ) && isset( $slug ) )
+			$name = $slug;
+			
+		if ( isset( $name ) ) {
+			
+			$posts = get_posts( array(
+				'name' => $name,
+				'post_type' => 'book',
+				'post_status' => 'publish',
+				'posts_per_page' => 1
+			) );
+			
+			if ( $posts )
+				$id = $posts[0]->ID;
+		}
+	}
+	
+	if ( isset( $id ) && $id )
+		return append_booklinks( $content, $id, true );
+	
+	return $content;
 }

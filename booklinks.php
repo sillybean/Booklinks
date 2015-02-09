@@ -8,24 +8,9 @@ Author: Stephanie Leary
 Author URI: http://stephanieleary.com
 License: GPL2
 */
-function mybooks_plugin_activate() {
-	register_book_init();
-	flush_rewrite_rules();
-}
-register_activation_hook( __FILE__, 'mybooks_plugin_activate' );
 
-function mybooks_plugin_deactivate() {
-	flush_rewrite_rules();
-}
-register_deactivation_hook( __FILE__, 'mybooks_plugin_deactivate' );
 
-function mybooks_plugin_uninstall() {
-	delete_option('booklinks_stores'); 
-	flush_rewrite_rules();
-}
-register_uninstall_hook( __FILE__, 'mybooks_plugin_uninstall' );
-
-// initializes the post type
+// create the post type every time WordPress runs
 add_action( 'init', 'register_book_init' );
 
 function register_book_init() {
@@ -62,7 +47,29 @@ array(
 ) );
 } // end register book
 
-include	'booklinks-options.php';
-include	'booklinks-content.php';
-include	'booklinks-meta.php';
-include	'booklinks-widget.php';
+
+// When the plugin is activated, create the post type and recreate the permalink rules (to add 'book')
+function mybooks_plugin_activate() {
+	register_book_init();
+	flush_rewrite_rules();
+}
+register_activation_hook( __FILE__, 'mybooks_plugin_activate' );
+
+// When the plugin is deactivated, reset the permalink rules (to remove 'book')
+function mybooks_plugin_deactivate() {
+	flush_rewrite_rules();
+}
+register_deactivation_hook( __FILE__, 'mybooks_plugin_deactivate' );
+
+// When the plugin is deleted, remove the setting from the options db table and reset the permalink rules
+function mybooks_plugin_uninstall() {
+	delete_option('booklinks_stores'); 
+	flush_rewrite_rules();
+}
+register_uninstall_hook( __FILE__, 'mybooks_plugin_uninstall' );
+
+
+include	'booklinks-options.php';   // settings screen
+include	'booklinks-content.php';   // filters to add links to 'book' posts
+include	'booklinks-meta.php';      // custom fields
+include	'booklinks-widget.php';    // bookstore links widget
